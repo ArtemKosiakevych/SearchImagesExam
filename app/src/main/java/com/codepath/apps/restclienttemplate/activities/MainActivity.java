@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.codepath.apps.restclienttemplate.Preferences;
 import com.codepath.apps.restclienttemplate.R;
 import com.codepath.apps.restclienttemplate.adapters.PhotoArrayAdapter;
 import com.daimajia.androidanimations.library.Techniques;
@@ -19,8 +20,9 @@ public class MainActivity extends Activity implements View.OnClickListener, Seek
     private SeekBar seekBar;
     private TextView countColumn;
     private EditText query;
-    private int mColumnNum = 2;
-    private String mQuery = "animals";
+    private int mColumnNum;
+    private String mQuery;
+    private Preferences pref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,8 +34,21 @@ public class MainActivity extends Activity implements View.OnClickListener, Seek
         countColumn = (TextView) findViewById(R.id.count);
         seekBar = (SeekBar) findViewById(R.id.seekBar);
 
+        getLastData();
         seekBar.setOnSeekBarChangeListener(this);
         search.setOnClickListener(this);
+    }
+
+    private void getLastData() {
+        pref = new Preferences(this);
+
+        mQuery = pref.getLastQuery();
+        mColumnNum = pref.getLastCount();
+
+        query.setText(mQuery);
+        countColumn.setText(String.valueOf(mColumnNum));
+        seekBar.setProgress(mColumnNum - 1);
+
     }
 
     private void findImages() {
@@ -43,12 +58,13 @@ public class MainActivity extends Activity implements View.OnClickListener, Seek
             intent.putExtra(PhotosActivity.TAG_COLUMN_NUM,mColumnNum);
             intent.putExtra(PhotosActivity.TAG_QUERY,mQuery);
             startActivity(intent);
+            overridePendingTransition(R.anim.slide_left_in, R.anim.slide_left_out);
         }
     }
 
     private boolean validData() {
         if (mQuery.trim().length()<1){
-            query.setError("Enter your query");
+            query.setError(getString(R.string.error_query));
             YoYo.with(Techniques.Swing).playOn(query);
             return false;
         }
@@ -60,6 +76,7 @@ public class MainActivity extends Activity implements View.OnClickListener, Seek
         if (view.getId() == R.id.search){
             mQuery = query.getText().toString();
             mColumnNum = Integer.parseInt(countColumn.getText().toString());
+            pref.soreLastQuery(mQuery);
             findImages();
         }
     }
@@ -67,6 +84,7 @@ public class MainActivity extends Activity implements View.OnClickListener, Seek
     @Override
     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
         countColumn.setText(String.valueOf(i+1));
+        pref.storeLastCount(i+1);
     }
 
     @Override

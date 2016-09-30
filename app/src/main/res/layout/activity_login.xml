@@ -2,14 +2,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.LoginActivity" >
-
-    <Button
-        android:layout_width="match_parent"
+    tools:context=".activities.LoginActivity"
+    android:background="@android:color/white">
+    <TextView
+        android:text="@string/please_sign_in_yahoo"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_margin="20dp"
+        android:textColor="@android:color/holo_blue_dark"
+        android:layout_marginTop="100dp" />
+    <Button
         android:onClick="loginToRest"
-        android:text="@string/login_label" />
+        android:textColor="#FFFFFF"
+        android:textSize="30sp"
+        android:layout_width="270dp"
+        android:layout_height="60dp"
+        android:background="@drawable/button_shape"
+        android:text="@string/login_label"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
