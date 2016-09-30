@@ -31,7 +31,7 @@
             android:id="@+id/query"
             android:layout_weight="1"
             android:layout_marginLeft="10dp"
-            android:textColor="@android:color/holo_blue_bright" />
+            android:textColor="@android:color/holo_blue_dark" />
     </LinearLayout>
 
     <LinearLayout
