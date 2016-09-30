@@ -1,10 +1,11 @@
-package com.codepath.apps.restclienttemplate;
+package com.codepath.apps.restclienttemplate.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.View;
 
+import com.codepath.apps.restclienttemplate.client.FlickrClient;
+import com.codepath.apps.restclienttemplate.R;
 import com.codepath.oauth.OAuthLoginActivity;
 
 public class LoginActivity extends OAuthLoginActivity<FlickrClient> {
@@ -14,17 +15,10 @@ public class LoginActivity extends OAuthLoginActivity<FlickrClient> {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.login, menu);
-		return true;
-	}
 	
     @Override
     public void onLoginSuccess() {
-    	Intent i = new Intent(this, PhotosActivity.class);
+    	Intent i = new Intent(this, MainActivity.class);
     	startActivity(i);
     }
 

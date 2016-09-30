@@ -1,4 +1,4 @@
-package com.codepath.apps.restclienttemplate;
+package com.codepath.apps.restclienttemplate.activities;
 
 import java.util.ArrayList;
 
@@ -8,15 +8,18 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
 import android.widget.GridView;
 
+import com.codepath.apps.restclienttemplate.client.FlickrClient;
+import com.codepath.apps.restclienttemplate.client.FlickrClientApp;
+import com.codepath.apps.restclienttemplate.adapters.PhotoArrayAdapter;
+import com.codepath.apps.restclienttemplate.R;
 import com.codepath.apps.restclienttemplate.models.FlickrPhoto;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 public class PhotosActivity extends Activity {
-	
+	public static final String TAG_COLUMN_NUM = "TAG_COLUMN_NUM";
+	public static final String TAG_QUERY = "TAG_QUERY";
 	FlickrClient client;
 	ArrayList<FlickrPhoto> photoItems;
 	GridView gvPhotos;
@@ -31,22 +34,25 @@ public class PhotosActivity extends Activity {
 		gvPhotos = (GridView) findViewById(R.id.gvPhotos);
 		adapter = new PhotoArrayAdapter(this, photoItems);
 		gvPhotos.setAdapter(adapter);
+		initData();
 		loadPhotos();
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.photos, menu);
-		return true;
+	private void initData() {
+		if (getIntent().getExtras()!=null){
+			int mColumnNum = getIntent().getIntExtra(TAG_COLUMN_NUM,2);
+			String mQuery = getIntent().getStringExtra(TAG_QUERY);
+			gvPhotos.setNumColumns(mColumnNum);
+			FlickrClient.query = mQuery;
+		}
 	}
-	
+
+
 	public void loadPhotos() {
 		client.getInterestingnessList(new JsonHttpResponseHandler() { 
     		public void onSuccess(JSONObject json) {
-                Log.d("DEBUG", "result: " + json.toString());
-                // Add new photos to SQLite
                 try {
+//					FlickrPhoto.delete(FlickrPhoto.class);
 					JSONArray photos = json.getJSONObject("photos").getJSONArray("photo");
 					for (int x = 0; x < photos.length(); x++) {
 						String uid  = photos.getJSONObject(x).getString("id");
@@ -56,14 +62,11 @@ public class PhotosActivity extends Activity {
 					}
 				} catch (JSONException e) {
 					e.printStackTrace();
-					Log.e("debug", e.toString());
 				}
-                
-				// Load into GridView from DB
+
 				for (FlickrPhoto p : FlickrPhoto.recentItems()) {
 					adapter.add(p);
 				}
-				Log.d("DEBUG", "Total: " + photoItems.size());
             }
     	});
 	}

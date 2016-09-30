@@ -29,7 +29,6 @@ public class FlickrPhoto extends Model {
 		try {
 			this.uid = object.getString("id");
 			this.name = object.getString("title");
-			// http://farm{farm-id}.staticflickr.com/{server-id}/{id}_{secret}.jpg
 			this.url = "http://farm" + object.getInt("farm") + ".staticflickr.com/" + object.getInt("server") + 
 			  "/" + uid + "_" + object.getString("secret") + ".jpg";
 		} catch (JSONException e) {
